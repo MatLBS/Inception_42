@@ -1,0 +1,82 @@
+# version: '3.8'
+
+services:
+  # Database
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb/
+    # image: mariadb:10.6.4-focal
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    env_file: .env
+    environment:
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+      MARIADB_DATABASE: '${MARIADB_DATABASE}'
+      MARIADB_USER: '${MARIADB_USER}'
+      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
+    networks:
+      - myNetwork 
+    restart: always
+
+
+  nginx:
+    container_name: nginx
+    depends_on:
+      - wordpress
+    build: ./requirements/nginx/
+    networks:
+      - myNetwork 
+    ports:
+      - "443:443"
+    links:
+      - wordpress
+    restart: always
+
+  
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    # build: ./requirements/wordpress/
+    image: wordpress
+    volumes:      
+      - wordpress_volume:/var/www/html
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: '${WORDPRESS_DB_HOST}'
+      WORDPRESS_DB_NAME: '${WORDPRESS_DB_NAME}'
+      WORDPRESS_DB_USER: '${WORDPRESS_DB_USER}'
+      WORDPRESS_DB_PASSWORD: '${WORDPRESS_DB_PASSWORD}'
+    networks:
+      - myNetwork 
+    ports:
+      - "9000:9000"
+    links:
+      - mariadb
+    restart: always
+
+#Network
+
+networks:
+  myNetwork:
+    driver: bridge
+
+#Volumes
+
+volumes:
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/home/matle-br/data/mariadb"
+
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/home/matle-br/data/wordpress"
+

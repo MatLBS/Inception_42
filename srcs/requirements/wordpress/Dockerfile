@@ -1,5 +1,6 @@
 FROM debian:bullseye
 
+EXPOSE 9000
 
 RUN apt-get update && \
     apt install -y \
@@ -13,18 +14,19 @@ RUN apt-get update && \
     # chmod 755 /var/www/html
 
 
+# Install WordPress
+RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
+RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
+RUN chown -R root:root /var/www/wordpress
+
 # Install WP-CLI
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
-# Remove old php.ini files (wihtout creating new image)
-# RUN rm /usr/local/etc/php/php.ini-development
-# RUN rm /usr/local/etc/php/php.ini-production
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp
 
-EXPOSE 9000
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY ./conf/config.sh /config.sh
 
-# COPY conf/wordpress.conf /usr/local/etc/php
+RUN chmod 777 /config.sh
 
-COPY conf/wordpress.conf /etc/wordpress/wordpress.conf
-
-# CMD ["wordpress", "-g", "daemon off;"]
+CMD ["/bin/bash", "config.sh"]

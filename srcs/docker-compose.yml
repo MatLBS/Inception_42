@@ -4,18 +4,18 @@ services:
   # Database
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb/
-    # image: mariadb:10.6.4-focal
+    # build: ./requirements/mariadb/
+    image: mariadb:10.6.4-focal
     ports:
       - 3306:3306
     volumes:
       - mariadb_volume:/var/lib/mysql
     env_file: .env
     environment:
-      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
-      MARIADB_DATABASE: '${MARIADB_DATABASE}'
-      MARIADB_USER: '${MARIADB_USER}'
-      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     networks:
       - myNetwork 
     restart: always
@@ -30,8 +30,6 @@ services:
       - myNetwork 
     ports:
       - "443:443"
-    links:
-      - wordpress
     restart: always
 
   
@@ -39,8 +37,8 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
-    # build: ./requirements/wordpress/
-    image: wordpress
+    build: ./requirements/wordpress/
+    # image: wordpress
     volumes:      
       - wordpress_volume:/var/www/html
     env_file: .env
@@ -53,8 +51,6 @@ services:
       - myNetwork 
     ports:
       - "9000:9000"
-    links:
-      - mariadb
     restart: always
 
 #Network

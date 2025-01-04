@@ -22,21 +22,20 @@
 
 # -------------------------------------------------------------
 
+echo "Démarrage du service MariaDB..."
 service mariadb start;
 
-mariadb -u root
+echo "Initialisation de la base de données MariaDB..."
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${MARIADB_DATABASE}\`;"
+mysql -e "CREATE USER IF NOT EXISTS \`${MARIADB_USER}\`@'localhost' IDENTIFIED BY '${MARIADB_PASSWORD}';"
+mysql -e "GRANT ALL PRIVILEGES ON \`${MARIADB_DATABASE}\`.* TO \`${MARIADB_USER}\`@'%' IDENTIFIED BY '${MARIADB_PASSWORD}';"
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MARIADB_ROOT_PASSWORD}';"
+mysql -e "FLUSH PRIVILEGES;"
 
-mariadb -e "CREATE DATABASE IF NOT EXISTS mydb;"
+mysqladmin -u root -p$MARIADB_ROOT_PASSWORD shutdown
+exec mysqld_safe
 
-mariadb -e "USE mydb";
-
-mariadb -e "CREATE OR REPLACE USER 'myuser'@'localhost' IDENTIFIED BY 'complexpassword';"
-mariadb -e "CREATE OR REPLACE USER 'myuser'@'%' IDENTIFIED BY 'complexpassword';"
-
-mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'localhost' IDENTIFIED BY 'complexpassword';"
-mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' IDENTIFIED BY 'complexpassword';"
-
-mariadb -e "FLUSH PRIVILEGES;"
+echo "La base de données MariaDB est en place !"
 
 # ------------------------------------------------------------
 

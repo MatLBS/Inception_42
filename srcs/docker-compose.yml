@@ -4,8 +4,15 @@ services:
   # Database
   mariadb:
     container_name: mariadb
-    # build: ./requirements/mariadb/
-    image: mariadb:10.6.4-focal
+    build: ./requirements/mariadb/
+    # image: mariadb:10.6.4-focal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+      start_interval: 5s
     ports:
       - 3306:3306
     volumes:
@@ -36,7 +43,10 @@ services:
   wordpress:
     container_name: wordpress
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
+        restart: true
+
     build: ./requirements/wordpress/
     # image: wordpress
     volumes:      

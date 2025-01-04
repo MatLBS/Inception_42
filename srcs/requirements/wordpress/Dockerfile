@@ -11,7 +11,6 @@ RUN apt-get update && \
     apt-get install php-fpm -y && \
     apt-get install php-mysql -y && \
     mkdir -p /var/run/wordpress
-    # chmod 755 /var/www/html
 
 
 # Install WordPress

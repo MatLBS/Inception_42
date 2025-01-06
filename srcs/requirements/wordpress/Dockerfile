@@ -28,4 +28,4 @@ COPY ./conf/config.sh /config.sh
 
 RUN chmod 777 /config.sh
 
-CMD ["/bin/bash", "config.sh"]
+ENTRYPOINT ["/config.sh"]

@@ -19,12 +19,12 @@ services:
       - mariadb_volume:/var/lib/mysql
     env_file: .env
     environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+      MARIADB_DATABASE: '${MARIADB_DATABASE}'
+      MARIADB_USER: '${MARIADB_USER}'
+      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
     networks:
-      - myNetwork 
+      - inception 
     restart: always
 
 
@@ -34,7 +34,7 @@ services:
       - wordpress
     build: ./requirements/nginx/
     networks:
-      - myNetwork 
+      - inception 
     ports:
       - "443:443"
     restart: always
@@ -46,7 +46,6 @@ services:
       mariadb:
         condition: service_healthy
         restart: true
-
     build: ./requirements/wordpress/
     # image: wordpress
     volumes:      
@@ -58,7 +57,7 @@ services:
       WORDPRESS_DB_USER: '${WORDPRESS_DB_USER}'
       WORDPRESS_DB_PASSWORD: '${WORDPRESS_DB_PASSWORD}'
     networks:
-      - myNetwork 
+      - inception 
     ports:
       - "9000:9000"
     restart: always
@@ -66,7 +65,8 @@ services:
 #Network
 
 networks:
-  myNetwork:
+  inception:
+    name: inception
     driver: bridge
 
 #Volumes

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Starting MariaDB..."
+
 mariadbd-safe --datadir=/var/lib/mysql &
 # service mysqld start
 sleep 5
@@ -17,8 +18,8 @@ mysqladmin -u root -p"${MARIADB_ROOT_PASSWORD}" shutdown
 # service mysqld stop
 
 echo "La base de données MariaDB est en place !"
-exec mariadbd-safe --datadir=/var/lib/mysql
-
+exec mariadbd-safe
+    
 # ----------------------------------------------------
 
 # echo "Initialisation de la base de données MariaDB..."

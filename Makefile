@@ -10,47 +10,39 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = inception
+fclean :
+    docker compose -f srcs/docker-compose.yml stop
+    docker compose -f srcs/docker-compose.yml down -v
+    docker images -f "dangling=true" -q | xargs -r docker rmi
+    docker ps -qa | xargs -r docker stop
+    docker ps -qa | xargs -r docker rm 
+    docker images -qa | xargs -r docker rmi -f
+    docker volume ls -q | xargs -r docker volume rm
+    - docker network ls -q | xargs -r docker network rm
+    docker ps -a -q | xargs -r docker rm -f
+    docker images -q | xargs -r docker rmi
+    docker system prune -a --force
+    cd srcs && docker compose down --volumes --remove-orphans
+    docker volume prune --force
+    cd srcs && docker compose down -v
+    cd srcs && docker compose down -v --rmi all
+    - rm srcs/.env
 
-GREEN = \033[32m
-YELLOW = \033[33m
-ROUGE = \033[1;31m
+# re : fclean all
 
-RM = rm -f
+# bonus : all
 
-
-all: docker compose up --remove-orphans
-
-docker network create --driver=bridge myNetwork
-
-#comamnde pour liberer un port
-#sudo systemctl stop mariadb
-
-
-clean :
-	@$(RM) -r $(OBJ_DIR)
-	@make clean --no-print-directory -C ./includes/libft
-
-fclean : clean
-	@$(RM) $(NAME) $(OBJ_DIR)
-	@make fclean --no-print-directory -C ./includes/libft
-	@echo "$(ROUGE)Fclean is running..."
-
-re : fclean all
-
-bonus : all
-
-.PHONY: all clean fclean re
+# .PHONY: all clean fclean re
 
 
 
 
-#TODO
+# #TODO
 
-DATA            :=    ${HOME}/data
-VOLUMES            :=    ${addprefix ${DATA}/,    \
-                        wordpress            \
-                        mariadb                \
-                    }
+# DATA            :=    ${HOME}/data
+# VOLUMES            :=    ${addprefix ${DATA}/,    \
+#                         wordpress            \
+#                         mariadb                \
+#                     }
 
-mkdir -p ${VOLUMES}  
+# mkdir -p ${VOLUMES}  

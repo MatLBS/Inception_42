@@ -7,16 +7,16 @@ RUN apt-get update && \
     vim \
     wget \
     mariadb-client && \
-    apt-get install php7.3 -y && \
+    apt-get install php7.4 -y && \
     apt-get install php-fpm -y && \
     apt-get install php-mysql -y && \
+    mkdir -p /var/run/php && \
     mkdir -p /var/run/wordpress
 
 
 # Install WordPress
 RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www && \
-    cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz && \
-    chown -R root:root /var/www/wordpress
+    cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
 
 # Install WP-CLI
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \

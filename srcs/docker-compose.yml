@@ -19,32 +19,13 @@ services:
       - inception 
     restart: on-failure
 
-
-  nginx:
-    container_name: nginx
-    depends_on:
-      - wordpress
-    build: ./requirements/nginx/
-    env_file: .env
-    environment:
-      DOMAIN_NAME: '${DOMAIN_NAME}'
-    networks:
-      - inception 
-    ports:
-      - "443:443"
-    restart: always
-
-  
   wordpress:
     container_name: wordpress
     depends_on:
     - mariadb
-        # condition: service_healthy
-        # restart: true
     build: ./requirements/wordpress/
-    # image: wordpress
     volumes:      
-      - wordpress_volume:/var/www/html
+      - wordpress_volume:/var/www/wordpress   
     env_file: .env
     environment:
       WORDPRESS_DB_HOST: '${WORDPRESS_DB_HOST}'
@@ -64,6 +45,23 @@ services:
     ports:
       - "9000:9000"
     restart: always
+
+  nginx:
+    container_name: nginx
+    depends_on:
+      - wordpress
+    build: ./requirements/nginx/
+    volumes:      
+      - wordpress_volume:/var/www/wordpress
+    env_file: .env
+    environment:
+      DOMAIN_NAME: '${DOMAIN_NAME}'
+    networks:
+      - inception 
+    ports:
+      - "443:443"
+    restart: always
+
 
 #Network
 

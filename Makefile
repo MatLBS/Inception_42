@@ -19,7 +19,6 @@ clean :
 	@docker volume prune --force
 	@docker system prune -a --force
 	@docker images -qa | xargs -r docker rmi -f
-	@docker volume ls -q | xargs -r docker volume rm
 	@docker network ls -q | xargs -r docker network rm
 	@cd srcs && docker compose down --volumes --remove-orphans
 	@sudo rm -rf $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)

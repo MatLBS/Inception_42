@@ -28,8 +28,8 @@ wp core install \
     --skip-email \
     --allow-root
 
-if ! wp user get $WP_USER --allow-root > /dev/null >&1; then
-    wp user create \
+if ! wp user get $WP_USER --allow-root > /dev/null 2>&1; then   
+    wp user create > /dev/null 2>&1 \
         $WP_USER \
         $WP_USER_MAIL \
         --user_pass=$WP_USER_PASSWD \

@@ -1,48 +1,39 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: matle-br <matle-br@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/10/07 21:07:58 by matle-br          #+#    #+#              #
-#    Updated: 2024/11/15 17:15:30 by matle-br         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+COMPOSE = docker compose
+FLAGS = -f
+COMPOSE_PATH = ./srcs/docker-compose.yml
+DATA = /home/matle-br/data
+MARIADB_VOLUME = /home/matle-br/data/mariadb
+WORDPRESS_VOLUME = /home/matle-br/data/wordpress
+
+all: up
+
+up:
+	@mkdir -p $(DATA) $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
+	@sudo chmod 755 $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
+	@sudo service mariadb stop
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) up --build
+
+clean :
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) stop
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) down -v
+	@docker volume prune --force
+	@docker system prune -a --force
+	@docker images -qa | xargs -r docker rmi -f
+	@docker volume ls -q | xargs -r docker volume rm
+	@docker network ls -q | xargs -r docker network rm
+	@cd srcs && docker compose down --volumes --remove-orphans
+	@sudo rm -rf $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
 
 fclean :
-    docker compose -f srcs/docker-compose.yml stop
-    docker compose -f srcs/docker-compose.yml down -v
-    docker images -f "dangling=true" -q | xargs -r docker rmi
-    docker ps -qa | xargs -r docker stop
-    docker ps -qa | xargs -r docker rm 
-    docker images -qa | xargs -r docker rmi -f
-    docker volume ls -q | xargs -r docker volume rm
-    - docker network ls -q | xargs -r docker network rm
-    docker ps -a -q | xargs -r docker rm -f
-    docker images -q | xargs -r docker rmi
-    docker system prune -a --force
-    cd srcs && docker compose down --volumes --remove-orphans
-    docker volume prune --force
-    cd srcs && docker compose down -v
-    cd srcs && docker compose down -v --rmi all
-    - rm srcs/.env
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) stop
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) down -v
+	@docker volume prune --force
+	@docker system prune -a --force
+	@docker images -qa | xargs -r docker rmi -f
+	@docker volume ls -q | xargs -r docker volume rm
+	@cd srcs && docker compose down --volumes --remove-orphans
+	@sudo rm -rf $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
 
-# re : fclean all
+re: fclean up
 
-# bonus : all
-
-# .PHONY: all clean fclean re
-
-
-
-
-# #TODO
-
-# DATA            :=    ${HOME}/data
-# VOLUMES            :=    ${addprefix ${DATA}/,    \
-#                         wordpress            \
-#                         mariadb                \
-#                     }
-
-# mkdir -p ${VOLUMES}  
+.PHONY: all up clean fclean re

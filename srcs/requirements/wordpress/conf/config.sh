@@ -2,8 +2,6 @@
 
 sleep 10
 
-mysql -h mariadb -u root -p$MARIADB_ROOT_PASSWORD -e "SHOW DATABASES;"
-
 cd /var/www/wordpress
 
 chown -R www-data:www-data /var/www/wordpress
@@ -30,15 +28,13 @@ wp core install \
     --skip-email \
     --allow-root
 
-if ! wp user get $WP_USER --allow-root > /dev/null 2>&1; then
+if ! wp user get $WP_USER --allow-root > /dev/null >&1; then
     wp user create \
-    $WP_USER \
-    $WP_USER_MAIL \
-    --user_pass=$WP_USER_PASSWD \
-    --allow-root \
-    --porcelain
+        $WP_USER \
+        $WP_USER_MAIL \
+        --user_pass=$WP_USER_PASSWD \
+        --allow-root \
+        --porcelain
 fi
 
 php-fpm7.4 -F;
-
-# /usr/sbin/php-fpm7.4 -F -R

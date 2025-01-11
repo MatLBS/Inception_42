@@ -1,4 +1,0 @@
-https://www.google.com/search?client=firefox-b-e&q=create+a+personalised+wordpress+image+docker
-
-https://www.linode.com/docs/guides/how-to-install-wordpress-using-wp-cli-on-debian-10/
-

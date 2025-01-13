@@ -10,6 +10,7 @@ RUN apt-get update && \
     apt-get install php7.4 -y && \
     apt-get install php-fpm -y && \
     apt-get install php-mysql -y && \
+    apt-get install redis-server -y && \
     mkdir -p /var/run/php && \
     mkdir -p /var/run/wordpress
 

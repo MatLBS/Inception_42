@@ -13,15 +13,10 @@ up:
 	@sudo service mariadb stop
 	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) up --build
 
-clean :
-	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) stop
-	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) down -v
-	@docker volume prune --force
+down :
+	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) down
 	@docker system prune -a --force
 	@docker images -qa | xargs -r docker rmi -f
-	@docker network ls -q | xargs -r docker network rm
-	@cd srcs && docker compose down --volumes --remove-orphans
-	@sudo rm -rf $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
 
 fclean :
 	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) stop
@@ -35,4 +30,4 @@ fclean :
 
 re: fclean up
 
-.PHONY: all up clean fclean re
+.PHONY: all up down fclean re

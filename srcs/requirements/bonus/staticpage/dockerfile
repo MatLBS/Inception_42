@@ -1,0 +1,7 @@
+FROM debian:bullseye
+
+COPY ./conf/index.html /index.html
+COPY ./conf/main.js /main.js
+COPY ./conf/style.css /style.css
+
+EXPOSE 4242

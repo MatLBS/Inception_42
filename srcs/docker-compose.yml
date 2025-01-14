@@ -63,25 +63,30 @@ services:
       - "4242:4242"
     restart: always
   
-  # redis:
-  #   container_name: redis
-  #   depends_on:
-  #     - mariadb
-  #   build: ./requirements/bonus/redis/
-  #   networks:
-  #     - inception
-  #   ports:
-  #     - "6379:6379"
-  #   restart: always
+  redis:
+    container_name: redis
+    depends_on:
+      - mariadb
+    build: ./requirements/bonus/redis/
+    networks:
+      - inception
+    ports:
+      - "6379:6379"
+    restart: always
 
-  # staticpage:
-  #   container_name: staticpage
-  #   build: ./requirements/bonus/staticpage/
-  #   networks:
-  #     - inception
-  #   ports:
-  #     - "4242:4242"
-  #   restart: always
+  adminer:
+    container_name: adminer
+    depends_on:
+      - wordpress
+    build: ./requirements/bonus/adminer
+    volumes:      
+      - wordpress_volume:/var/www/wordpress
+    # image: adminer
+    networks:
+      - inception
+    ports:
+      - 8080:8080
+    restart: always
 
 #Network
 

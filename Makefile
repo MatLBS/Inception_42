@@ -20,12 +20,10 @@ down :
 
 fclean :
 	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) stop
-	@$(COMPOSE) $(FLAGS) $(COMPOSE_PATH) down -v
-	@docker volume prune --force
-	@docker system prune -a --force
+	@$(COMPOSE) -f $(COMPOSE_PATH) down -v --remove-orphans
+	@docker system prune -a -f --volumes
 	@docker images -qa | xargs -r docker rmi -f
 	@docker volume ls -q | xargs -r docker volume rm
-	@cd srcs && docker compose down --volumes --remove-orphans
 	@sudo rm -rf $(MARIADB_VOLUME) $(WORDPRESS_VOLUME)
 
 re: fclean up

@@ -37,12 +37,16 @@ if ! wp user get $WP_USER --allow-root > /dev/null 2>&1; then
         --porcelain
 fi
 
+wp config set WP_REDIS_HOST 'redis' --raw --allow-root
+wp config set WP_REDIS_PORT 6379 --raw --allow-root
+wp config set WP_CACHE true --raw --allow-root
+
+apt-get install php-redis -y
+
 if ! wp plugin get redis-cache --allow-root > /dev/null 2>&1; then  
     wp plugin install redis-cache --activate --allow-root
 fi
 
-sed -i "/\/\* That's all, stop editing! Happy publishing. \*\//i\
-define('WP_REDIS_HOST', '127.0.0.1');\n\
-define('WP_REDIS_PORT', 6379);\n" wp-config.php
+wp redis enable --allow-root
 
 php-fpm7.4 -F;

@@ -2,7 +2,7 @@
 
 echo "Installing Adminer..."
 
-wget https://github.com/vrana/adminer/releases/download/v4.7.8/adminer-4.7.8.php -P /var/www/html
+wget https://www.adminer.org/latest.php -O var/www/wordpress/adminer.php 
 
-chown -R www-data:www-data /var/www/html
-chmod -R 755 /var/www/html
+chown -R www-data:www-data /var/www/wordpress
+chmod -R 755 /var/www/wordpress

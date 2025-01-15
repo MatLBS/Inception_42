@@ -1,6 +1,6 @@
 FROM debian:bullseye
 
-EXPOSE 443 4242 8080
+EXPOSE 443 4242
 
 RUN apt-get update && \
     apt install nginx vim curl -y && \

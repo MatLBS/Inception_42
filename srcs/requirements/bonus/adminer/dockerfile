@@ -1,12 +1,10 @@
 FROM debian:bullseye
 
-RUN	apt-get update && apt-get upgrade -y
-RUN apt install wget -y
-
-EXPOSE 8080
+RUN	apt-get update && apt-get upgrade -y && \
+    apt install wget -y
 
 COPY conf/adminer.sh /adminer.sh
 
 RUN chmod 755 /adminer.sh
 
-ENTRYPOINT ["/adminer.sh"]
+CMD ["/adminer.sh"]

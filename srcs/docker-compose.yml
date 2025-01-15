@@ -1,7 +1,6 @@
 # version: '3.8'
 
 services:
-  # Database
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb/
@@ -81,11 +80,39 @@ services:
     build: ./requirements/bonus/adminer
     volumes:      
       - wordpress_volume:/var/www/wordpress
-    # image: adminer
+    networks:
+      - inception
+    restart: on-failure
+
+  ftp:
+    container_name: ftp
+    depends_on:
+      - wordpress
+    build: ./requirements/bonus/ftp
+    volumes:      
+      - wordpress_volume:/home/${FTP_USERNAME}/ftp/files/
+    env_file: .env
+    environment:
+      FTP_USERNAME: '${FTP_USERNAME}'
+      FTP_PASSWORD: '${FTP_PASSWORD}'
     networks:
       - inception
     ports:
-      - 8080:8080
+      - "20:20"
+      - "21:21"
+      - "40000-40005:40000-40005"
+    restart: on-failure
+
+  portainer:
+    container_name: portainer
+    build: ./requirements/bonus/portainer
+    networks:
+      - inception
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - "9443:9443"
     restart: always
 
 #Network
@@ -111,4 +138,6 @@ volumes:
       type: none
       o: bind
       device: /home/matle-br/data/wordpress
+  
+  portainer_data:
 

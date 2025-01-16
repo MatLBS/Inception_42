@@ -15,8 +15,9 @@ chmod 777 /home/$FTP_USERNAME/ftp
 
 mkdir -p /home/$FTP_USERNAME/ftp/files
 chown $FTP_USERNAME:$FTP_USERNAME /home/$FTP_USERNAME/ftp/files
+
 chmod 777 /home/$FTP_USERNAME/ftp/files
 
 service vsftpd stop
 
-/usr/sbin/vsftpd
+/usr/sbin/vsftpd /etc/vsftpd.conf

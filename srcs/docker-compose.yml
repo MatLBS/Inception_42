@@ -89,12 +89,12 @@ services:
     depends_on:
       - wordpress
     build: ./requirements/bonus/ftp
-    volumes:      
-      - wordpress_volume:/home/${FTP_USERNAME}/ftp/files/
     env_file: .env
     environment:
       FTP_USERNAME: '${FTP_USERNAME}'
       FTP_PASSWORD: '${FTP_PASSWORD}'
+    volumes:      
+      - wordpress_volume:/home/ftpuser/ftp/files
     networks:
       - inception
     ports:

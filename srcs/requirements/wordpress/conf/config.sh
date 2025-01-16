@@ -5,7 +5,7 @@ sleep 10
 cd /var/www/wordpress
 
 chown -R www-data:www-data /var/www/wordpress
-chmod -R 755 /var/www/wordpress
+chmod -R 777 /var/www/wordpress
 
 if [ ! -f ./wp-config.php ]
 then

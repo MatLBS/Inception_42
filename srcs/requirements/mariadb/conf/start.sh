@@ -2,7 +2,7 @@
 
 echo "Starting MariaDB..."
 
-mysqld_safe --datadir=/var/lib/mysql &
+service mariadb start
 sleep 5
 
 echo "Initialisation de la base de données MariaDB..."

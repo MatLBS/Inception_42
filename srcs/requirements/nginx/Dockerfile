@@ -11,7 +11,6 @@ RUN apt-get update && \
     chmod 755 /var/www/html && \
     chown -R www-data:www-data /var/www/html
 
-COPY static /usr/share/nginx/html
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]

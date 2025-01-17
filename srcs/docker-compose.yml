@@ -49,9 +49,11 @@ services:
     container_name: nginx
     depends_on:
       - wordpress
+      - static_page
     build: ./requirements/nginx/
     volumes:      
       - wordpress_volume:/var/www/wordpress
+      - website_volume:/var/www/home
     env_file: .env
     environment:
       DOMAIN_NAME: '${DOMAIN_NAME}'
@@ -62,6 +64,17 @@ services:
       - "4242:4242"
     restart: always
   
+  #Bonus
+
+  static_page:
+    container_name: static_page
+    build: ./requirements/bonus/static_page/
+    networks:
+      - inception
+    volumes:      
+      - website_volume:/var/www/home
+    restart: on-failure
+
   redis:
     container_name: redis
     depends_on:
@@ -138,6 +151,13 @@ volumes:
       type: none
       o: bind
       device: /home/matle-br/data/wordpress
+
+  website_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/matle-br/data/website
   
   portainer_data:
 
